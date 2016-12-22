@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Latest compiled and minified jQuery -->
+    <script src="https://code.jquery.com/jquery-2.2.3.js"
+            integrity="sha256-laXWtGydpwqJ8JA+X9x2miwmaiKhn8tVmOVEigRNtP4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+    <!-- Angular (minified) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+
+    <!--Controllers for this page/app -->
+    <script src="javascripts/controllers.js"></script>
+
+    <!-- Local styles -->
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <link href="../stylesheets/query.css" rel="stylesheet" type="text/css">
+
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+</head>
+
+<body ng-app="Wave">
+    <div class= "site-wrapper" ng-controller="waveCtrl" ng-init="initApp()">
+        <div class="site-wrapper-inner">
+            <div class="search-banner">
+                <div class= "cover-container">
+                    <div class="masthead clearfix" style="position: relative">
+                        <div class="inner">
+                            <div class="masthead-brand" ></div>
+                            <nav>
+                                <ul class="nav masthead-nav">
+                                    <li class="active"><a href="/query">Search</a></li>
+                                    <li><a href="/logout">Log Out</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2> Query New York Times images and analyze emotions. </h2>
+                        </div>
+                        <div class="col-md-6">
+                            <div class ="field">
+                                <label for= "keyword">Keyword</label>
+                                <br>
+                                <input type='text' name='keyword' id='keyword' ng-model="Query">
+                            </div>
+                            <div class ="dateDropDown">
+                                <label for= "startDate">Start Date</label>
+                                <input id="startDate" type="text" placeholder="dd.mm.yyyy" ng-model="startDate"/>
+                            </div>
+                            <div class="dateDropdown">
+                                <label for="endDate">End Date</label>
+                                <input id="endDate" type="text" placeholder="dd.mm.yyyy" ng-model="endDate"/>
+                            </div>
+
+                            <button ng-click="callApis()">Get Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
+            <div ng-repeat="emotions in fromAPIs">
+                <div class="grid-item">
+                    <img src={{emotions.image}}>
+                    <div class="picinfo">
+                        Anger: {{ emotions.anger }}
+                        <br>
+                        Contept: {{ emotions.contempt }}
+                        <br>
+                        Disgust: {{ emotions.disgust}}
+                        <br>
+                        Fear: {{ emotions.fear }}
+                        <br>
+                        Happiness: {{ emotions.happiness }}
+                        <br>
+                        Neutral: {{ emotions.neutral }}
+                        <br>
+                        Sadness: {{ emotions.sadness }}
+                        <br>
+                        Surprise: {{ emotions.surprise }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        function MyDate(id) {
+        this.targetElement = document.getElementById(id);
+        this.init();
+         };
+
+    MyDate.prototype = {
+
+        MONTHS: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'],
+
+        YEAR_OFFSET: 21,
+
+        HELPER_ELEMENTS_HTML_FRAGMENT: '<fieldset class="mydate"><select class="day">{{day}}</select><select class="month">{{month}}</select><select class="year">{{year}}</select></fieldset>',
+
+        init: function () {
+            this.toggle();
+            this.addHelperElements();
+            this.bindUIActions();
+        },
+
+        toggle: function () {
+            var elemStyle = this.targetElement.style;
+
+            if (elemStyle.display === "none") {
+                elemStyle.display = "";
+            } else {
+                elemStyle.display = "none";
+            };
+        },
+
+        addHelperElements: function () {
+            var today = this.getToday(),
+                lists = this.getHelperLists(today),
+                fragment = '';
+
+            fragment = this.HELPER_ELEMENTS_HTML_FRAGMENT
+                .split('{{year}}').join(lists.years)
+                .split('{{month}}').join(lists.months)
+                .split('{{day}}').join(lists.days);
+
+            this.targetElement.insertAdjacentHTML('afterend', fragment);
+        },
+
+        getToday: function () {
+            var today = new Date();
+
+            return {
+                day: today.getUTCDate(),
+                month: today.getUTCMonth(),
+                year: today.getUTCFullYear()
+            };
+        },
+
+        getHelperLists: function (dayObj) {
+            return {
+                years: this.getYearsList(dayObj),
+                months: this.getMonthsList(dayObj),
+                days: this.getDaysList(dayObj)
+            };
+        },
+
+        getYearsList: function (dayObj) {
+            var years = '';
+
+            for(var i = 2016; i >= 1900; i--){
+                var y = i;
+                years = years + '<option value="'
+                              + y
+                              + '"'
+                              + ( (i === dayObj.year) ? "selected" : "" )
+                              + '>'
+                              +  y
+                              + '</option>';
+            };
+
+            return years;
+        },
+
+        getMonthsList: function (dayObj) {
+            var months = '';
+
+            for(var i = 0; i < this.MONTHS.length; i++){
+                var m = this.MONTHS[i];
+                months = months + '<option value="'
+                                + m
+                                + '"'
+                                + ( (dayObj.month === i) ? "selected" : "" )
+                                + '>'
+                                +  m
+                                + '</option>';
+            };
+
+            return months;
+        },
+
+        getDaysList: function (dayObj) {
+            var days = '';
+
+            for(var i = 0, n = this.getDaysInMonth(dayObj.year, dayObj.month); i < n; i++){
+                var d = i + 1;
+                days = days + '<option value="'
+                            + d
+                            + '"'
+                            + ( (dayObj.day === i + 1) ? "selected" : "" )
+                            + '>'
+                            +  d
+                            + '</option>';
+            };
+
+            return days;
+        },
+
+        getDaysInMonth: function (year, month) {
+            return new Date(year, month, 0).getDate();
+        },
+
+        bindUIActions: function () {
+            var dateWidgets = document.getElementsByClassName('mydate');
+
+            for (var i = 0; i < dateWidgets.length; i++) {
+                dateWidgets[i].onchange = this.dayResetter;
+            };
+        },
+
+        dayResetter: function (event) {
+            var allSelects,
+                yearSelect, monthSelect, daySelect,
+                year = '', month = '',
+                fragment = '';
+
+            event.preventDefault();
+
+            if (event.target.className !== 'day') {
+                allSelects = this.getElementsByTagName('select');
+
+                yearSelect = allSelects[2];
+                monthSelect = allSelects[1];
+                daySelect = allSelects[0];
+
+                year = yearSelect.options[yearSelect.selectedIndex].text;
+                month = monthSelect.selectedIndex+1;
+
+                fragment = '<select class="day">' + MyDate.prototype.getDaysList( {year: year, month: month} ) + '</select>';
+
+                daySelect.innerHTML = '';
+                daySelect.insertAdjacentHTML('afterBegin', fragment);
+            }
+        }
+    };
+        var sdat = new MyDate("startDate"),
+        edat = new MyDate("endDate");
+    </script>
+
+
+</body>
+</html>

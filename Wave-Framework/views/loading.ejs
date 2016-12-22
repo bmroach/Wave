@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Latest compiled and minified jQuery -->
+    <script src="https://code.jquery.com/jquery-2.2.3.js"
+            integrity="sha256-laXWtGydpwqJ8JA+X9x2miwmaiKhn8tVmOVEigRNtP4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+    <!-- Angular (minified) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+
+    <!--Controllers for this page/app -->
+    <script src="javascripts/controllers.js"></script>
+
+    <!-- Local styles -->
+    <link rel="stylesheet" href="stylesheets/style.css">
+
+</head>
+
+<body ng-app="Wave">
+
+
+<div ng-controller="waveCtrl" ng-init="initApp()">
+
+    Query : {{ query }}
+    StartDate : {{ start_date }}
+    EndDate : {{ end_date }}
+
+    <p>Keyword <input type="text" ng-model="Query"> </p>    
+    <p>Start Date YYYYMMDD <input type="text" ng-model="startDate"> </p>
+    <p>End Date YYYYMMDD <input type="text" ng-model="endDate"> </p>
+
+    <button ng-click="getNYT()">Get Data</button>
+
+
+    <!--Update this section to parse response object-->
+    <!---->
+    <div class="col-xs-12" style="height:30px;"></div>
+    <div class="well col-md-6">
+        {{ fromNYT }}
+    </div>
+
+</div>
+
+
+</body>
+</html>
